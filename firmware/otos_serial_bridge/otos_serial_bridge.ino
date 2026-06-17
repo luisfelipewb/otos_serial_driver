@@ -31,46 +31,46 @@ void emitCsv(
     const sfe_otos_pose2d_t &velStdDev,
     const sfe_otos_pose2d_t &accStdDev)
 {
-    Serial.print(pos.x, 6);
+    Serial.print(pos.x, 4);
     Serial.print(',');
-    Serial.print(pos.y, 6);
+    Serial.print(pos.y, 4);
     Serial.print(',');
-    Serial.print(pos.h, 6);
-    Serial.print(',');
-
-    Serial.print(vel.x, 6);
-    Serial.print(',');
-    Serial.print(vel.y, 6);
-    Serial.print(',');
-    Serial.print(vel.h, 6);
+    Serial.print(pos.h, 4);
     Serial.print(',');
 
-    Serial.print(acc.x, 6);
+    Serial.print(vel.x, 4);
     Serial.print(',');
-    Serial.print(acc.y, 6);
+    Serial.print(vel.y, 4);
     Serial.print(',');
-    Serial.print(acc.h, 6);
-    Serial.print(',');
-
-    Serial.print(posStdDev.x, 6);
-    Serial.print(',');
-    Serial.print(posStdDev.y, 6);
-    Serial.print(',');
-    Serial.print(posStdDev.h, 6);
+    Serial.print(vel.h, 4);
     Serial.print(',');
 
-    Serial.print(velStdDev.x, 6);
+    Serial.print(acc.x, 4);
     Serial.print(',');
-    Serial.print(velStdDev.y, 6);
+    Serial.print(acc.y, 4);
     Serial.print(',');
-    Serial.print(velStdDev.h, 6);
+    Serial.print(acc.h, 4);
     Serial.print(',');
 
-    Serial.print(accStdDev.x, 6);
+    Serial.print(posStdDev.x, 4);
     Serial.print(',');
-    Serial.print(accStdDev.y, 6);
+    Serial.print(posStdDev.y, 4);
     Serial.print(',');
-    Serial.println(accStdDev.h, 6);
+    Serial.print(posStdDev.h, 4);
+    Serial.print(',');
+
+    Serial.print(velStdDev.x, 4);
+    Serial.print(',');
+    Serial.print(velStdDev.y, 4);
+    Serial.print(',');
+    Serial.print(velStdDev.h, 4);
+    Serial.print(',');
+
+    Serial.print(accStdDev.x, 4);
+    Serial.print(',');
+    Serial.print(accStdDev.y, 4);
+    Serial.print(',');
+    Serial.println(accStdDev.h, 4);
 }
 
 void processCommand(char *cmd)
@@ -79,6 +79,7 @@ void processCommand(char *cmd)
     {
         myOtos.resetTracking();
         Serial.println("#OK,R");
+        delay(500);
         return;
     }
 
@@ -164,6 +165,9 @@ void setup()
     myOtos.setAngularUnit(kSfeOtosAngularUnitRadians);
     myOtos.setLinearScalar(1.0f);
     myOtos.setAngularScalar(1.0f);
+    sfe_otos_pose2d_t offset = {0.1017, 0, 0}; //TODO Don't use hardcoded value
+    myOtos.setOffset(offset);
+
     myOtos.resetTracking();
 
     Serial.println("#READY");
