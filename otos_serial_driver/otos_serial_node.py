@@ -135,8 +135,12 @@ class OtosSerialNode(Node):
         odom.pose.pose.orientation.w = math.cos(h * 0.5)
         odom.pose.covariance = pose_cov
 
-        odom.twist.twist.linear.x = vx
-        odom.twist.twist.linear.y = vy
+        # OTOS reports linear velocity in the world (odom) frame, but the
+        # Odometry twist must be expressed in the child frame. Rotate by -h.
+        cos_h = math.cos(h)
+        sin_h = math.sin(h)
+        odom.twist.twist.linear.x = vx * cos_h + vy * sin_h
+        odom.twist.twist.linear.y = -vx * sin_h + vy * cos_h
         odom.twist.twist.linear.z = 0.0
         odom.twist.twist.angular.x = 0.0
         odom.twist.twist.angular.y = 0.0
