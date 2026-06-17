@@ -20,7 +20,7 @@ class OtosSerialNode(Node):
     def __init__(self) -> None:
         super().__init__("otos_serial_node")
 
-        self.declare_parameter("serial_port", "/dev/ttyACM0")
+        self.declare_parameter("serial_port", "/dev/arduino")
         self.declare_parameter("baud_rate", 115200)
         self.declare_parameter("frame_id", "odom")
         self.declare_parameter("child_frame_id", "base_link")
@@ -48,7 +48,7 @@ class OtosSerialNode(Node):
         self._stop_event = threading.Event()
         self._serial_conn: Optional[serial.Serial] = None
 
-        self._odom_pub = self.create_publisher(Odometry, "/odom", 10)
+        self._odom_pub = self.create_publisher(Odometry, "/otos_odom", 10)
         self._tf_broadcaster = TransformBroadcaster(self)
 
         self.create_service(Empty, "/otos/reset", self._on_reset)

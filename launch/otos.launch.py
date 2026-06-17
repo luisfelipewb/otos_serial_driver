@@ -10,7 +10,7 @@ import os
 def generate_launch_description():
     serial_port_arg = DeclareLaunchArgument(
         "serial_port",
-        default_value="/dev/ttyACM0",
+        default_value="/dev/arduino",
         description="Serial device path for Arduino OTOS bridge",
     )
 
@@ -28,4 +28,20 @@ def generate_launch_description():
         parameters=[params_file, {"serial_port": LaunchConfiguration("serial_port")}],
     )
 
-    return LaunchDescription([serial_port_arg, node])
+    static_tf = Node(
+        package="tf2_ros",
+        executable="static_transform_publisher",
+        name="otos_static_tf",
+        arguments=[
+            "--x", "0.1017",
+            "--y", "0.0",
+            "--z", "0.0",
+            "--roll", "0.0",
+            "--pitch", "0.0",
+            "--yaw", "0.0",
+            "--frame-id", "base_link",
+            "--child-frame-id", "otos_link",
+            ],
+        )
+
+    return LaunchDescription([serial_port_arg, node, static_tf])
